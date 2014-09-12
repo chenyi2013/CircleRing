@@ -18,11 +18,11 @@ public class CustomCircleView extends View {
 
 	private Paint mPaint = new Paint();
 
-	private int selledCount = 45;
+	private int selledCount = 145;
 	private int totalCount = 360;
 	private int yesterdayCount = 38;
 
-	private int circularWidth = 50;
+	private int circularWidth = 150;
 	private int smallCircleRadius = 5;
 	private int indictorLineWeight = 2;
 
@@ -82,6 +82,9 @@ public class CustomCircleView extends View {
 
 		int dia = validWidth > validHeight ? validHeight : validWidth;
 		int radius = dia / 2;
+
+		startX = startX + (getWidth() - dia - startX * 2) / 2;
+		startY = startY + (getHeight() - dia - startY * 2) / 2;
 
 		int endX = startX + dia;
 		int endY = startY + dia;
