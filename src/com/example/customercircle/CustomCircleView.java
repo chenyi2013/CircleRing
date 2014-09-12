@@ -7,27 +7,40 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.FontMetrics;
+import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 public class CustomCircleView extends View {
 
-	private Paint mOuterCircle = new Paint();
-	private Paint mInnerCircle = new Paint();
-	private Paint mTextPaint = new Paint();
+	private Paint mPaint = new Paint();
 
-	private int selledCount = 90;
+	private int selledCount = 45;
 	private int totalCount = 360;
-	private int yesterdayCount;
+	private int yesterdayCount = 38;
 
-	private int circularWidth = 20;
-	private int smallCircleRadius = 25;
+	private int circularWidth = 50;
+	private int smallCircleRadius = 5;
 	private int indictorLineWeight = 2;
 
 	private int totalCountFontSize = 28;
 	private int totalTitleFontSize;
+
+	private int totalCountTitleColor = Color.GREEN;
+	private int totalCountColor = Color.CYAN;
+
+	private int selledCountTitleColor = Color.GREEN;
+	private int selledCountColor = Color.CYAN;
+
+	private int yesterdayCountTitleColor = Color.RED;
+	private int yesterdayCountColor = Color.BLUE;
+
+	private int lineColor = Color.MAGENTA;
+
+	private final int fontMarginBottom = 10;
 
 	public CustomCircleView(Context context) {
 		super(context);
@@ -56,77 +69,149 @@ public class CustomCircleView extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 
-		mInnerCircle.setAntiAlias(true);
-		mInnerCircle.setStyle(Style.STROKE);
-		mInnerCircle.setStrokeWidth(circularWidth);
-		mInnerCircle.setColor(Color.RED);
-
-		mOuterCircle.setAntiAlias(true);
-		mOuterCircle.setStyle(Style.STROKE);
-		mOuterCircle.setStrokeWidth(circularWidth / 2);
-		mOuterCircle.setColor(Color.GRAY);
-
 		int fontHeight = getFontHeight(totalCountFontSize) * 2;
-		int fontWidth = getFontWidth(totalCountFontSize) + 40;
+		int fontWidth = getFontWidth(totalCountFontSize) + 20;
 
 		int validWidth = getWidth() - fontWidth * 2 - circularWidth
 				- smallCircleRadius * 2;
 		int validHeight = getHeight() - fontHeight * 2 - circularWidth
 				- smallCircleRadius * 2;
 
+		int startX = fontWidth + circularWidth / 2 + smallCircleRadius;
+		int startY = fontHeight + circularWidth / 2 + smallCircleRadius;
+
 		int dia = validWidth > validHeight ? validHeight : validWidth;
 		int radius = dia / 2;
 
-		float selled = convertNumberToPI(selledCount, 360);
-		float total = convertNumberToPI(totalCount - selled, 360);
+		int endX = startX + dia;
+		int endY = startY + dia;
 
-		canvas.drawArc(new RectF(fontWidth + circularWidth + smallCircleRadius,
-				fontHeight + circularWidth + smallCircleRadius,
-				fontWidth + dia, fontHeight + dia), 0,
-				convertNumberToAngle(selledCount, totalCount), false,
-				mInnerCircle);
+		int x = startX + radius;
+		int y = startY + radius;
 
-		// canvas.drawArc(new RectF(fontWidth-14, fontHeight-14, fontWidth + dia
-		// + 14,
-		// fontHeight + dia + 14), 0, 90, false, mOuterCircle);
+		float selled = convertNumberToPI(selledCount, totalCount);
+		float total = convertNumberToPI(selledCount - totalCount, totalCount);
 
-		mInnerCircle.setColor(Color.BLUE);
-		canvas.drawArc(new RectF(fontWidth + circularWidth + smallCircleRadius,
-				fontHeight + circularWidth + smallCircleRadius,
-				fontWidth + dia, fontHeight + dia),
-				convertNumberToAngle(selledCount, totalCount),
-				360 - convertNumberToAngle(selledCount, totalCount), false,
-				mInnerCircle);
+		mPaint.setColor(Color.BLUE);
+		mPaint.setStrokeWidth(2);
 
-		mInnerCircle.setStrokeWidth(2);
-		canvas.drawLine(
-				fontWidth + radius + radius * (float) Math.cos(selled / 2)
-						+ circularWidth / 4, fontHeight + radius + radius
-						* (float) Math.sin(selled / 2) + circularWidth / 4,
-				getWidth(),
-				fontHeight + radius + radius * (float) Math.sin(selled / 2)
-						+ circularWidth / 4, mInnerCircle);
+		mPaint.setTextSize(28);
+		mPaint.setAntiAlias(true);
 
-//		canvas.drawLine(radius + radius * (float) Math.cos(total / 2), radius
-//				+ radius * (float) Math.sin(total / 2), 0, radius + radius
-//				* (float) Math.sin(total / 2), mInnerCircle);
+		mPaint.setTextAlign(Align.CENTER);
+		mPaint.setColor(yesterdayCountColor);
+		canvas.drawText("38", x, y + getFontHeight(totalCountFontSize) / 2
+				+ fontMarginBottom, mPaint);
+		mPaint.setColor(yesterdayCountTitleColor);
+		canvas.drawText("昨日销量", x, y, mPaint);
 
-		mInnerCircle.setStyle(Style.FILL);
-		canvas.drawCircle(0 + smallCircleRadius, fontHeight + radius + radius
-				* (float) Math.sin(total / 2), smallCircleRadius, mInnerCircle);
-		canvas.drawCircle(getWidth() - smallCircleRadius, fontHeight + radius
-				+ radius * (float) Math.sin(selled / 2) + circularWidth / 4,
-				smallCircleRadius, mInnerCircle);
+		mPaint.setTextAlign(Align.LEFT);
+		mPaint.setColor(lineColor);
+		if (getXValuse(x, radius, selled / 2) > x) {
+			canvas.drawLine(getXValuse(x, radius, selled / 2),
+					getYValuse(y, radius, selled / 2), getWidth(),
+					getYValuse(y, radius, selled / 2), mPaint);
+			canvas.drawCircle(getWidth() - smallCircleRadius, y + radius
+					* (float) Math.sin(selled / 2), smallCircleRadius, mPaint);
+			mPaint.setColor(selledCountColor);
+			canvas.drawText("" + selledCount, x + radius + circularWidth / 2, y
+					+ radius * (float) Math.sin(selled / 2)
+					- indictorLineWeight / 2 - fontMarginBottom, mPaint);
+			mPaint.setColor(selledCountTitleColor);
+			canvas.drawText("总销售套数", x + radius + circularWidth / 2, y + radius
+					* (float) Math.sin(selled / 2) - indictorLineWeight / 2 - 2
+					* fontMarginBottom - getFontHeight(totalCountFontSize) / 2,
+					mPaint);
 
-		Paint paint = new Paint();
-		paint.setTextSize(28);
+		} else {
+			canvas.drawLine(getXValuse(x, radius, selled / 2),
+					getYValuse(y, radius, selled / 2), 0,
+					getYValuse(y, radius, selled / 2), mPaint);
+			canvas.drawCircle(0 + smallCircleRadius,
+					y + radius * (float) Math.sin(selled / 2),
+					smallCircleRadius, mPaint);
+			mPaint.setColor(selledCountColor);
+			canvas.drawText("" + selledCount, 0 + smallCircleRadius * 2, y
+					+ radius * (float) Math.sin(selled / 2)
+					- indictorLineWeight / 2 - fontMarginBottom, mPaint);
+			mPaint.setColor(selledCountTitleColor);
+			canvas.drawText("总销售套数", 0 + smallCircleRadius * 2, y + radius
+					* (float) Math.sin(selled / 2) - indictorLineWeight / 2 - 2
+					* fontMarginBottom - getFontHeight(totalCountFontSize) / 2,
+					mPaint);
 
-		canvas.drawText("0000000000", fontWidth + radius + radius, fontHeight
-				+ radius + radius * (float) Math.sin(selled / 2), paint);
+		}
 
-		canvas.drawText("0000000000", 0 + smallCircleRadius * 2, fontHeight
-				+ radius + radius * (float) Math.sin(total / 2) - 10, paint);
+		mPaint.setColor(lineColor);
+		if (getXValuse(x, radius, total / 2) > x) {
 
+			canvas.drawLine(getXValuse(x, radius, total / 2),
+					getYValuse(y, radius, total / 2), getWidth(),
+					getYValuse(y, radius, total / 2), mPaint);
+			canvas.drawCircle(getWidth() - smallCircleRadius, y + radius
+					* (float) Math.sin(total / 2), smallCircleRadius, mPaint);
+			mPaint.setColor(totalCountColor);
+			canvas.drawText("" + totalCount, x + radius + circularWidth / 2, y
+					+ radius * (float) Math.sin(total / 2) - indictorLineWeight
+					/ 2 - fontMarginBottom, mPaint);
+			mPaint.setColor(totalCountTitleColor);
+			canvas.drawText("总房屋套数", x + radius + circularWidth / 2, y + radius
+					* (float) Math.sin(total / 2) - indictorLineWeight / 2 - 2
+					* fontMarginBottom - getFontHeight(totalCountFontSize) / 2,
+					mPaint);
+
+		} else {
+			canvas.drawLine(getXValuse(x, radius, total / 2),
+					getYValuse(y, radius, total / 2), 0,
+					getYValuse(y, radius, total / 2), mPaint);
+			canvas.drawCircle(0 + smallCircleRadius,
+					y + radius * (float) Math.sin(total / 2),
+					smallCircleRadius, mPaint);
+			mPaint.setColor(totalCountColor);
+			canvas.drawText("" + totalCount, 0 + smallCircleRadius * 2, y
+					+ radius * (float) Math.sin(total / 2) - indictorLineWeight
+					/ 2 - fontMarginBottom, mPaint);
+
+			mPaint.setColor(totalCountTitleColor);
+			canvas.drawText("总房屋套数", 0 + smallCircleRadius * 2, y + radius
+					* (float) Math.sin(total / 2) - indictorLineWeight / 2 - 2
+					* fontMarginBottom - getFontHeight(totalCountFontSize) / 2,
+					mPaint);
+		}
+
+		mPaint.setAntiAlias(true);
+		mPaint.setStyle(Style.STROKE);
+		mPaint.setDither(true);
+		mPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
+		mPaint.setStrokeJoin(Join.ROUND);
+		mPaint.setStrokeWidth(circularWidth);
+		mPaint.setStrokeMiter(68);
+
+		mPaint.setColor(Color.GREEN);
+		canvas.drawArc(new RectF(startX, startY, endX, endY),
+				convertNumberToAngle(selledCount, totalCount), 360, false,
+				mPaint);
+
+		Log.i("eileen",
+				"" + convertNumberToAngle(totalCount - selledCount, totalCount));
+
+		mPaint.setColor(Color.RED);
+		canvas.drawArc(new RectF(startX, startY, endX, endY), 0,
+				convertNumberToAngle(selledCount, totalCount), false, mPaint);
+
+		mPaint.setColor(Color.BLUE);
+		mPaint.setStyle(Style.FILL);
+
+		mPaint.setTextAlign(Align.CENTER);
+
+	}
+
+	private float getXValuse(float x, float radius, float angle) {
+		return x + radius * (float) Math.cos(angle);
+	}
+
+	private float getYValuse(float y, float radius, float angle) {
+		return y + radius * (float) Math.sin(angle);
 	}
 
 	/**
