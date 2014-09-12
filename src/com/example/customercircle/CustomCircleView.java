@@ -18,9 +18,15 @@ public class CustomCircleView extends View {
 
 	private Paint mPaint = new Paint();
 
-	private int selledCount = 145;
+	private int selledCount = 15;
 	private int totalCount = 360;
 	private int yesterdayCount = 38;
+
+	private final int space = 10;
+
+	private String totalTitle = "总房屋套数";
+	private String selledTitle = "总销售套数";
+	private String yesterDayTitle = "昨日销量";
 
 	private int circularWidth = 150;
 	private int smallCircleRadius = 5;
@@ -103,10 +109,11 @@ public class CustomCircleView extends View {
 
 		mPaint.setTextAlign(Align.CENTER);
 		mPaint.setColor(yesterdayCountColor);
-		canvas.drawText("38", x, y + getFontHeight(totalCountFontSize) / 2
-				+ fontMarginBottom, mPaint);
+		canvas.drawText(yesterdayCount + "", x, y
+				+ getFontHeight(totalCountFontSize) / 2 + fontMarginBottom,
+				mPaint);
 		mPaint.setColor(yesterdayCountTitleColor);
-		canvas.drawText("昨日销量", x, y, mPaint);
+		canvas.drawText(yesterDayTitle, x, y, mPaint);
 
 		mPaint.setTextAlign(Align.LEFT);
 		mPaint.setColor(lineColor);
@@ -117,14 +124,15 @@ public class CustomCircleView extends View {
 			canvas.drawCircle(getWidth() - smallCircleRadius, y + radius
 					* (float) Math.sin(selled / 2), smallCircleRadius, mPaint);
 			mPaint.setColor(selledCountColor);
-			canvas.drawText("" + selledCount, x + radius + circularWidth / 2, y
-					+ radius * (float) Math.sin(selled / 2)
+			canvas.drawText("" + selledCount, x + radius + circularWidth / 2
+					+ space, y + radius * (float) Math.sin(selled / 2)
 					- indictorLineWeight / 2 - fontMarginBottom, mPaint);
 			mPaint.setColor(selledCountTitleColor);
-			canvas.drawText("总销售套数", x + radius + circularWidth / 2, y + radius
-					* (float) Math.sin(selled / 2) - indictorLineWeight / 2 - 2
-					* fontMarginBottom - getFontHeight(totalCountFontSize) / 2,
-					mPaint);
+			canvas.drawText(selledTitle,
+					x + radius + circularWidth / 2 + space, y + radius
+							* (float) Math.sin(selled / 2) - indictorLineWeight
+							/ 2 - 2 * fontMarginBottom
+							- getFontHeight(totalCountFontSize) / 2, mPaint);
 
 		} else {
 			canvas.drawLine(getXValuse(x, radius, selled / 2),
@@ -138,7 +146,7 @@ public class CustomCircleView extends View {
 					+ radius * (float) Math.sin(selled / 2)
 					- indictorLineWeight / 2 - fontMarginBottom, mPaint);
 			mPaint.setColor(selledCountTitleColor);
-			canvas.drawText("总销售套数", 0 + smallCircleRadius * 2, y + radius
+			canvas.drawText(selledTitle, 0 + smallCircleRadius * 2, y + radius
 					* (float) Math.sin(selled / 2) - indictorLineWeight / 2 - 2
 					* fontMarginBottom - getFontHeight(totalCountFontSize) / 2,
 					mPaint);
@@ -154,14 +162,14 @@ public class CustomCircleView extends View {
 			canvas.drawCircle(getWidth() - smallCircleRadius, y + radius
 					* (float) Math.sin(total / 2), smallCircleRadius, mPaint);
 			mPaint.setColor(totalCountColor);
-			canvas.drawText("" + totalCount, x + radius + circularWidth / 2, y
-					+ radius * (float) Math.sin(total / 2) - indictorLineWeight
-					/ 2 - fontMarginBottom, mPaint);
+			canvas.drawText("" + totalCount, x + radius + circularWidth / 2
+					+ space, y + radius * (float) Math.sin(total / 2)
+					- indictorLineWeight / 2 - fontMarginBottom, mPaint);
 			mPaint.setColor(totalCountTitleColor);
-			canvas.drawText("总房屋套数", x + radius + circularWidth / 2, y + radius
-					* (float) Math.sin(total / 2) - indictorLineWeight / 2 - 2
-					* fontMarginBottom - getFontHeight(totalCountFontSize) / 2,
-					mPaint);
+			canvas.drawText(totalTitle, x + radius + circularWidth / 2 + space,
+					y + radius * (float) Math.sin(total / 2)
+							- indictorLineWeight / 2 - 2 * fontMarginBottom
+							- getFontHeight(totalCountFontSize) / 2, mPaint);
 
 		} else {
 			canvas.drawLine(getXValuse(x, radius, total / 2),
@@ -176,7 +184,7 @@ public class CustomCircleView extends View {
 					/ 2 - fontMarginBottom, mPaint);
 
 			mPaint.setColor(totalCountTitleColor);
-			canvas.drawText("总房屋套数", 0 + smallCircleRadius * 2, y + radius
+			canvas.drawText(totalTitle, 0 + smallCircleRadius * 2, y + radius
 					* (float) Math.sin(total / 2) - indictorLineWeight / 2 - 2
 					* fontMarginBottom - getFontHeight(totalCountFontSize) / 2,
 					mPaint);
@@ -186,17 +194,13 @@ public class CustomCircleView extends View {
 		mPaint.setStyle(Style.STROKE);
 		mPaint.setDither(true);
 		mPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-		mPaint.setStrokeJoin(Join.ROUND);
 		mPaint.setStrokeWidth(circularWidth);
-		mPaint.setStrokeMiter(68);
+		
 
 		mPaint.setColor(Color.GREEN);
 		canvas.drawArc(new RectF(startX, startY, endX, endY),
 				convertNumberToAngle(selledCount, totalCount), 360, false,
 				mPaint);
-
-		Log.i("eileen",
-				"" + convertNumberToAngle(totalCount - selledCount, totalCount));
 
 		mPaint.setColor(Color.RED);
 		canvas.drawArc(new RectF(startX, startY, endX, endY), 0,

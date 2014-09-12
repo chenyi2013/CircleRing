@@ -1,0 +1,121 @@
+[1mdiff --git a/src/com/example/customercircle/CustomCircleView.java b/src/com/example/customercircle/CustomCircleView.java[m
+[1mindex 73f0c05..fcd6f90 100644[m
+[1m--- a/src/com/example/customercircle/CustomCircleView.java[m
+[1m+++ b/src/com/example/customercircle/CustomCircleView.java[m
+[36m@@ -18,10 +18,16 @@[m [mpublic class CustomCircleView extends View {[m
+ [m
+ 	private Paint mPaint = new Paint();[m
+ [m
+[31m-	private int selledCount = 145;[m
+[32m+[m	[32mprivate int selledCount = 15;[m
+ 	private int totalCount = 360;[m
+ 	private int yesterdayCount = 38;[m
+ [m
+[32m+[m	[32mprivate final int space = 10;[m
+[32m+[m
+[32m+[m	[32mprivate String totalTitle = "×Ü·¿ÎÝÌ×Êý";[m
+[32m+[m	[32mprivate String selledTitle = "×ÜÏúÊÛÌ×Êý";[m
+[32m+[m	[32mprivate String yesterDayTitle = "×òÈÕÏúÁ¿";[m
+[32m+[m
+ 	private int circularWidth = 150;[m
+ 	private int smallCircleRadius = 5;[m
+ 	private int indictorLineWeight = 2;[m
+[36m@@ -103,10 +109,11 @@[m [mpublic class CustomCircleView extends View {[m
+ [m
+ 		mPaint.setTextAlign(Align.CENTER);[m
+ 		mPaint.setColor(yesterdayCountColor);[m
+[31m-		canvas.drawText("38", x, y + getFontHeight(totalCountFontSize) / 2[m
+[31m-				+ fontMarginBottom, mPaint);[m
+[32m+[m		[32mcanvas.drawText(yesterdayCount + "", x, y[m
+[32m+[m				[32m+ getFontHeight(totalCountFontSize) / 2 + fontMarginBottom,[m
+[32m+[m				[32mmPaint);[m
+ 		mPaint.setColor(yesterdayCountTitleColor);[m
+[31m-		canvas.drawText("×òÈÕÏúÁ¿", x, y, mPaint);[m
+[32m+[m		[32mcanvas.drawText(yesterDayTitle, x, y, mPaint);[m
+ [m
+ 		mPaint.setTextAlign(Align.LEFT);[m
+ 		mPaint.setColor(lineColor);[m
+[36m@@ -117,14 +124,15 @@[m [mpublic class CustomCircleView extends View {[m
+ 			canvas.drawCircle(getWidth() - smallCircleRadius, y + radius[m
+ 					* (float) Math.sin(selled / 2), smallCircleRadius, mPaint);[m
+ 			mPaint.setColor(selledCountColor);[m
+[31m-			canvas.drawText("" + selledCount, x + radius + circularWidth / 2, y[m
+[31m-					+ radius * (float) Math.sin(selled / 2)[m
+[32m+[m			[32mcanvas.drawText("" + selledCount, x + radius + circularWidth / 2[m
+[32m+[m					[32m+ space, y + radius * (float) Math.sin(selled / 2)[m
+ 					- indictorLineWeight / 2 - fontMarginBottom, mPaint);[m
+ 			mPaint.setColor(selledCountTitleColor);[m
+[31m-			canvas.drawText("×ÜÏúÊÛÌ×Êý", x + radius + circularWidth / 2, y + radius[m
+[31m-					* (float) Math.sin(selled / 2) - indictorLineWeight / 2 - 2[m
+[31m-					* fontMarginBottom - getFontHeight(totalCountFontSize) / 2,[m
+[31m-					mPaint);[m
+[32m+[m			[32mcanvas.drawText(selledTitle,[m
+[32m+[m					[32mx + radius + circularWidth / 2 + space, y + radius[m
+[32m+[m							[32m* (float) Math.sin(selled / 2) - indictorLineWeight[m
+[32m+[m							[32m/ 2 - 2 * fontMarginBottom[m
+[32m+[m							[32m- getFontHeight(totalCountFontSize) / 2, mPaint);[m
+ [m
+ 		} else {[m
+ 			canvas.drawLine(getXValuse(x, radius, selled / 2),[m
+[36m@@ -138,7 +146,7 @@[m [mpublic class CustomCircleView extends View {[m
+ 					+ radius * (float) Math.sin(selled / 2)[m
+ 					- indictorLineWeight / 2 - fontMarginBottom, mPaint);[m
+ 			mPaint.setColor(selledCountTitleColor);[m
+[31m-			canvas.drawText("×ÜÏúÊÛÌ×Êý", 0 + smallCircleRadius * 2, y + radius[m
+[32m+[m			[32mcanvas.drawText(selledTitle, 0 + smallCircleRadius * 2, y + radius[m
+ 					* (float) Math.sin(selled / 2) - indictorLineWeight / 2 - 2[m
+ 					* fontMarginBottom - getFontHeight(totalCountFontSize) / 2,[m
+ 					mPaint);[m
+[36m@@ -154,14 +162,14 @@[m [mpublic class CustomCircleView extends View {[m
+ 			canvas.drawCircle(getWidth() - smallCircleRadius, y + radius[m
+ 					* (float) Math.sin(total / 2), smallCircleRadius, mPaint);[m
+ 			mPaint.setColor(totalCountColor);[m
+[31m-			canvas.drawText("" + totalCount, x + radius + circularWidth / 2, y[m
+[31m-					+ radius * (float) Math.sin(total / 2) - indictorLineWeight[m
+[31m-					/ 2 - fontMarginBottom, mPaint);[m
+[32m+[m			[32mcanvas.drawText("" + totalCount, x + radius + circularWidth / 2[m
+[32m+[m					[32m+ space, y + radius * (float) Math.sin(total / 2)[m
+[32m+[m					[32m- indictorLineWeight / 2 - fontMarginBottom, mPaint);[m
+ 			mPaint.setColor(totalCountTitleColor);[m
+[31m-			canvas.drawText("×Ü·¿ÎÝÌ×Êý", x + radius + circularWidth / 2, y + radius[m
+[31m-					* (float) Math.sin(total / 2) - indictorLineWeight / 2 - 2[m
+[31m-					* fontMarginBottom - getFontHeight(totalCountFontSize) / 2,[m
+[31m-					mPaint);[m
+[32m+[m			[32mcanvas.drawText(totalTitle, x + radius + circularWidth / 2 + space,[m
+[32m+[m					[32my + radius * (float) Math.sin(total / 2)[m
+[32m+[m							[32m- indictorLineWeight / 2 - 2 * fontMarginBottom[m
+[32m+[m							[32m- getFontHeight(totalCountFontSize) / 2, mPaint);[m
+ [m
+ 		} else {[m
+ 			canvas.drawLine(getXValuse(x, radius, total / 2),[m
+[36m@@ -176,7 +184,7 @@[m [mpublic class CustomCircleView extends View {[m
+ 					/ 2 - fontMarginBottom, mPaint);[m
+ [m
+ 			mPaint.setColor(totalCountTitleColor);[m
+[31m-			canvas.drawText("×Ü·¿ÎÝÌ×Êý", 0 + smallCircleRadius * 2, y + radius[m
+[32m+[m			[32mcanvas.drawText(totalTitle, 0 + smallCircleRadius * 2, y + radius[m
+ 					* (float) Math.sin(total / 2) - indictorLineWeight / 2 - 2[m
+ 					* fontMarginBottom - getFontHeight(totalCountFontSize) / 2,[m
+ 					mPaint);[m
+[36m@@ -186,18 +194,14 @@[m [mpublic class CustomCircleView extends View {[m
+ 		mPaint.setStyle(Style.STROKE);[m
+ 		mPaint.setDither(true);[m
+ 		mPaint.setFlags(Paint.ANTI_ALIAS_FLAG);[m
+[31m-		mPaint.setStrokeJoin(Join.ROUND);[m
+ 		mPaint.setStrokeWidth(circularWidth);[m
+[31m-		mPaint.setStrokeMiter(68);[m
+[32m+[m[41m		[m
+ [m
+ 		mPaint.setColor(Color.GREEN);[m
+ 		canvas.drawArc(new RectF(startX, startY, endX, endY),[m
+ 				convertNumberToAngle(selledCount, totalCount), 360, false,[m
+ 				mPaint);[m
+ [m
+[31m-		Log.i("eileen",[m
+[31m-				"" + convertNumberToAngle(totalCount - selledCount, totalCount));[m
+[31m-[m
+ 		mPaint.setColor(Color.RED);[m
+ 		canvas.drawArc(new RectF(startX, startY, endX, endY), 0,[m
+ 				convertNumberToAngle(selledCount, totalCount), false, mPaint);[m
+warning: LF will be replaced by CRLF in src/com/example/customercircle/CustomCircleView.java.
+The file will have its original line endings in your working directory.
